@@ -26,9 +26,9 @@ public class Tilt : MonoBehaviour {
         }
 
        
-        float deltaChange = (delay - 45 * h) * 2 * Time.deltaTime;
-        delay -= deltaChange; 
-        delay = Mathf.Clamp(delay, -45, 45);
+        float deltaChange = (delay - 10 * h) * 2 * Time.deltaTime;
+        delay -= deltaChange * .5f; 
+        delay = Mathf.Clamp(delay, -10,10);
         Vector2 origin = new Vector2(transform.eulerAngles.x, transform.eulerAngles.y);
         transform.eulerAngles = new Vector3(origin.x, origin.y, delay);
         Debug.Log(deltaChange+" "+h);
