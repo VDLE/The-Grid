@@ -2,15 +2,17 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: SkyCarWheelGrey
   m_Shader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _LIGHTMAPPING_STATIC_LIGHTMAPS _NORMALMAP _UVPRIM_UV1 _UVSEC_UV1
+  m_ShaderKeywords: _EMISSION _LIGHTMAPPING_STATIC_LIGHTMAPS _NORMALMAP _UVPRIM_UV1
+    _UVSEC_UV1
   m_LightmapFlags: 0
   m_CustomRenderQueue: -1
+  stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -87,18 +89,6 @@ Material:
     m_Floats:
       data:
         first:
-          name: _Cutoff
-        second: .5
-      data:
-        first:
-          name: _Shininess
-        second: .500134408
-      data:
-        first:
-          name: _AlphaTestRef
-        second: .5
-      data:
-        first:
           name: _SrcBlend
         second: 1
       data:
@@ -107,8 +97,16 @@ Material:
         second: 0
       data:
         first:
-          name: _Parallax
-        second: .0199999996
+          name: _Cutoff
+        second: 0.5
+      data:
+        first:
+          name: _AlphaTestRef
+        second: 0.5
+      data:
+        first:
+          name: _Shininess
+        second: 0.5001344
       data:
         first:
           name: _ZWrite
@@ -116,11 +114,15 @@ Material:
       data:
         first:
           name: _Glossiness
-        second: .150000006
+        second: 0.15
       data:
         first:
           name: _BumpScale
-        second: .5
+        second: 0.5
+      data:
+        first:
+          name: _Parallax
+        second: 0.02
       data:
         first:
           name: _OcclusionStrength
@@ -135,11 +137,11 @@ Material:
         second: 0
       data:
         first:
-          name: _EmissionScaleUI
+          name: _Mode
         second: 0
       data:
         first:
-          name: _Mode
+          name: _EmissionScaleUI
         second: 0
       data:
         first:
@@ -165,11 +167,11 @@ Material:
       data:
         first:
           name: _EmissionColor
-        second: {r: 0, g: 0, b: 0, a: 0}
+        second: {r: 0.054498274, g: 0.69624144, b: 0.8235294, a: 0}
       data:
         first:
           name: _Color
-        second: {r: .498039216, g: .498039216, b: .498039216, a: 1}
+        second: {r: 0.49803922, g: 0.49803922, b: 0.49803922, a: 1}
       data:
         first:
           name: _SpecColor
@@ -185,4 +187,4 @@ Material:
       data:
         first:
           name: _SpecularColor
-        second: {r: .345588207, g: .345588207, b: .345588207, a: 1}
+        second: {r: 0.3455882, g: 0.3455882, b: 0.3455882, a: 1}
