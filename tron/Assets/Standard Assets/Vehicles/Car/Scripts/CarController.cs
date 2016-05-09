@@ -62,8 +62,9 @@ namespace UnityStandardAssets.Vehicles.Car
             for (int i = 0; i < 2; i++)
             {
                 m_WheelMeshLocalRotations[i] = m_WheelMeshes[i].transform.localRotation;
+                m_WheelColliders[i].attachedRigidbody.centerOfMass = m_CentreOfMassOffset;
+
             }
-            m_WheelColliders[0].attachedRigidbody.centerOfMass = m_CentreOfMassOffset;
 
             m_MaxHandbrakeTorque = float.MaxValue;
 
@@ -362,6 +363,23 @@ namespace UnityStandardAssets.Vehicles.Car
                 }
             }
             return false;
+        }
+
+        void OnTriggerEnter(Collider col)
+        {
+            if(col.tag == "Speedup")
+            {
+                Debug.Log("Speedup");
+                m_Rigidbody.velocity *= 1.2f;
+            }
+        }
+
+        void OnTriggerExit(Collider col)
+        {
+            if (col.tag == "Speedup")
+            {
+                Move(0, 0, -1f, 1f);
+            }
         }
     }
 }

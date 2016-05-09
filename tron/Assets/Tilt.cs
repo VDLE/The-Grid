@@ -31,7 +31,7 @@ public class Tilt : MonoBehaviour {
         delay = Mathf.Clamp(delay, -10,10);
         Vector2 origin = new Vector2(transform.eulerAngles.x, transform.eulerAngles.y);
         transform.eulerAngles = new Vector3(origin.x, origin.y, delay);
-        Debug.Log(deltaChange+" "+h);
+       // Debug.Log(deltaChange+" "+h);
         AxisManager.turn = h;
 	}
 }

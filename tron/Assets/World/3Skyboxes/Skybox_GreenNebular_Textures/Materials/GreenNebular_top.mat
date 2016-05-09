@@ -7,10 +7,11 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: GreenNebular_top
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _SUNDISK_HIGH_QUALITY
+  m_Shader: {fileID: 4800000, guid: 85a1339b6e0be4a4589f6a1527c66357, type: 3}
+  m_ShaderKeywords: _ACTIVATEGRADIENT_ON _ATTENUATEBACKFACE_ON _LINEWIDTHDISTANCEDEPENDENT_ON
+    _SUNDISK_HIGH_QUALITY
   m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2
@@ -32,6 +33,13 @@ Material:
       data:
         first:
           name: _DetailNormalMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _MetallicGlossMap
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
@@ -73,7 +81,7 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _MetallicGlossMap
+          name: _GradientTex
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
@@ -93,10 +101,6 @@ Material:
         second: 0.5
       data:
         first:
-          name: _Parallax
-        second: 0.02
-      data:
-        first:
           name: _ZWrite
         second: 1
       data:
@@ -105,8 +109,16 @@ Material:
         second: 0.5
       data:
         first:
+          name: _Metallic
+        second: 0
+      data:
+        first:
           name: _BumpScale
         second: 1
+      data:
+        first:
+          name: _Parallax
+        second: 0.02
       data:
         first:
           name: _OcclusionStrength
@@ -125,8 +137,32 @@ Material:
         second: 0
       data:
         first:
-          name: _Metallic
-        second: 0
+          name: _LineWidth
+        second: 0.05
+      data:
+        first:
+          name: _LineWidthDistanceDependent
+        second: 1
+      data:
+        first:
+          name: _FrameSharpness
+        second: 0.5
+      data:
+        first:
+          name: _ActivateGradient
+        second: 1
+      data:
+        first:
+          name: _VertSize
+        second: 0.09
+      data:
+        first:
+          name: _AttenuateBackFace
+        second: 1
+      data:
+        first:
+          name: _BackFaceAttenuation
+        second: 0.5
     m_Colors:
       data:
         first:
@@ -136,3 +172,7 @@ Material:
         first:
           name: _Color
         second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _WireframeColor
+        second: {r: 0, g: 0, b: 1, a: 1}

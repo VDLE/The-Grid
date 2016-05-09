@@ -32,4 +32,6 @@ public class TronController : MonoBehaviour
             AxisManager.pressed = 0;
         }
     }
+
+
 }
