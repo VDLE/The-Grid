@@ -59,12 +59,11 @@ namespace UnityStandardAssets.Vehicles.Car
         private void Start()
         {
             m_WheelMeshLocalRotations = new Quaternion[4];
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 m_WheelMeshLocalRotations[i] = m_WheelMeshes[i].transform.localRotation;
-                m_WheelColliders[i].attachedRigidbody.centerOfMass = m_CentreOfMassOffset;
-
             }
+            m_WheelColliders[0].attachedRigidbody.centerOfMass = m_CentreOfMassOffset;
 
             m_MaxHandbrakeTorque = float.MaxValue;
 
@@ -129,7 +128,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
         public void Move(float steering, float accel, float footbrake, float handbrake)
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 Quaternion quat;
                 Vector3 position;
@@ -148,7 +147,7 @@ namespace UnityStandardAssets.Vehicles.Car
             //Assuming that wheels 0 and 1 are the front wheels.
             m_SteerAngle = steering*m_MaximumSteerAngle;
             m_WheelColliders[0].steerAngle = m_SteerAngle;
-           // m_WheelColliders[1].steerAngle = m_SteerAngle;
+            m_WheelColliders[1].steerAngle = m_SteerAngle;
 
             SteerHelper();
             ApplyDrive(accel, footbrake);
@@ -159,8 +158,8 @@ namespace UnityStandardAssets.Vehicles.Car
             if (handbrake > 0f)
             {
                 var hbTorque = handbrake*m_MaxHandbrakeTorque;
-                m_WheelColliders[1].brakeTorque = hbTorque;
-                //m_WheelColliders[3].brakeTorque = hbTorque;
+                m_WheelColliders[2].brakeTorque = hbTorque;
+                m_WheelColliders[3].brakeTorque = hbTorque;
             }
 
 
@@ -202,7 +201,7 @@ namespace UnityStandardAssets.Vehicles.Car
             {
                 case CarDriveType.FourWheelDrive:
                     thrustTorque = accel * (m_CurrentTorque / 4f);
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < 4; i++)
                     {
                         m_WheelColliders[i].motorTorque = thrustTorque;
                     }
@@ -220,7 +219,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
             }
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (CurrentSpeed > 5 && Vector3.Angle(transform.forward, m_Rigidbody.velocity) < 50f)
                 {
@@ -237,7 +236,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private void SteerHelper()
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 WheelHit wheelhit;
                 m_WheelColliders[i].GetGroundHit(out wheelhit);
@@ -272,7 +271,7 @@ namespace UnityStandardAssets.Vehicles.Car
         private void CheckForWheelSpin()
         {
             // loop through all wheels
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 WheelHit wheelHit;
                 m_WheelColliders[i].GetGroundHit(out wheelHit);
@@ -309,7 +308,7 @@ namespace UnityStandardAssets.Vehicles.Car
             {
                 case CarDriveType.FourWheelDrive:
                     // loop through all wheels
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < 4; i++)
                     {
                         m_WheelColliders[i].GetGroundHit(out wheelHit);
 
@@ -355,7 +354,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private bool AnySkidSoundPlaying()
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (m_WheelEffects[i].PlayingAudio)
                 {
@@ -363,23 +362,6 @@ namespace UnityStandardAssets.Vehicles.Car
                 }
             }
             return false;
-        }
-
-        void OnTriggerEnter(Collider col)
-        {
-            if(col.tag == "Speedup")
-            {
-                Debug.Log("Speedup");
-                m_Rigidbody.velocity *= 1.2f;
-            }
-        }
-
-        void OnTriggerExit(Collider col)
-        {
-            if (col.tag == "Speedup")
-            {
-                Move(0, 0, -1f, 1f);
-            }
         }
     }
 }
