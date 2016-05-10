@@ -19,3 +19,5 @@ C:\Users\jblocher\Documents\The-Grid\tron\Temp\bin\Debug\UnityEngine.Networking.
 C:\Users\jblocher\Documents\The-Grid\tron\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
 C:\Users\jblocher\Documents\The-Grid\tron\obj\Debug\Assembly-CSharp-firstpass.dll
 C:\Users\jblocher\Documents\The-Grid\tron\obj\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\jblocher\Documents\The-Grid\tron\Temp\bin\Debug\GETween.dll
+C:\Users\jblocher\Documents\The-Grid\tron\Temp\bin\Debug\GUIAnimatorFREE.dll

@@ -47,6 +47,8 @@ namespace UnityStandardAssets.Vehicles.Car
         private Rigidbody m_Rigidbody;
         private const float k_ReversingThreshold = 0.01f;
 
+        public bool Dead {get; set;}
+
         public bool Skidding { get; private set; }
         public float BrakeInput { get; private set; }
         public float CurrentSteerAngle{ get { return m_SteerAngle; }}
@@ -69,6 +71,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
             m_Rigidbody = GetComponent<Rigidbody>();
             m_CurrentTorque = m_FullTorqueOverAllWheels - (m_TractionControl*m_FullTorqueOverAllWheels);
+            Dead = false;
         }
 
 
@@ -147,7 +150,7 @@ namespace UnityStandardAssets.Vehicles.Car
             //Assuming that wheels 0 and 1 are the front wheels.
             m_SteerAngle = steering*m_MaximumSteerAngle;
             m_WheelColliders[0].steerAngle = m_SteerAngle;
-            m_WheelColliders[1].steerAngle = m_SteerAngle;
+           // m_WheelColliders[1].steerAngle = m_SteerAngle;
 
             SteerHelper();
             ApplyDrive(accel, footbrake);
@@ -158,8 +161,8 @@ namespace UnityStandardAssets.Vehicles.Car
             if (handbrake > 0f)
             {
                 var hbTorque = handbrake*m_MaxHandbrakeTorque;
-                m_WheelColliders[2].brakeTorque = hbTorque;
-                m_WheelColliders[3].brakeTorque = hbTorque;
+                m_WheelColliders[1].brakeTorque = hbTorque;
+                //m_WheelColliders[3].brakeTorque = hbTorque;
             }
 
 
@@ -362,6 +365,17 @@ namespace UnityStandardAssets.Vehicles.Car
                 }
             }
             return false;
+        }
+
+        private void OnCollisionStay(Collision col)
+        {
+            if (col.transform.tag == "LightTrail" && col.transform.position.z > transform.position.z && col.transform.position.x > transform.position.x && Math.Abs(transform.position.y - 1) < 0.1f)
+            {
+                Debug.Log(gameObject.name + " collided with " + col.gameObject.name);
+                transform.FindChild("jt_Root_C").gameObject.SetActive(false);
+                transform.FindChild("cyclepieces").gameObject.SetActive(true);
+                Dead = true;
+            }
         }
     }
 }

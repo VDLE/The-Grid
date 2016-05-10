@@ -47,6 +47,8 @@ namespace UnityStandardAssets.Vehicles.Car
         private Vector3 attackSide;
         private bool UpRamp;
 
+
+
         private void Awake()
         {
             // get the car controller reference
@@ -63,11 +65,16 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private void FixedUpdate()
         {
+            if (m_CarController.Dead)
+            {
+                m_Rigidbody.velocity = Vector3.zero;
+                return;
+            }
             Debug.Log(name + " at Floor " + CurrentFloor());
 
             var up = transform.TransformDirection(Vector3.up);
             var right = transform.TransformDirection(Vector3.right);
-            RaycastHit hit;
+            RaycastHit hit1, hit2;
 
             Vector3 fwd = transform.forward;
             if (m_Rigidbody.velocity.magnitude > m_CarController.MaxSpeed * 0.01f)
@@ -104,8 +111,8 @@ namespace UnityStandardAssets.Vehicles.Car
             }
             else
             {
-                Debug.Log(name + " Attack mode.");
                 offsetTargetPos = m_Target.position + m_Target.forward * 15.0f + attackSide * 15.0f;
+                UpRamp = false;
             }
             localTarget = transform.InverseTransformPoint(offsetTargetPos);
 
@@ -113,55 +120,60 @@ namespace UnityStandardAssets.Vehicles.Car
             // now it's time to decide if we should be speeding up...        
             if (localTarget.magnitude < m_ReachTargetThreshold && TargetFloor() == CurrentFloor())
             {
-                Debug.Log(name + " Attack!");
-
                 attackSide *= -1.0f;
                 m_Rigidbody.velocity *= 1.2f;
 
             }
 
             // the car will brake as it approaches a wall
-            if (Physics.Raycast(transform.position, transform.forward, out hit, 3.0f))
+            bool wall = Physics.Raycast(transform.position, transform.forward, out hit1, 3.0f);
+            bool floor = Physics.Raycast(transform.position + transform.forward * 2.0f, Vector3.down, out hit2, 0.5f);
+            /*
+            if ((wall && hit1.collider.tag != "Ramp" ) || !floor)
             {
-                    if (hit.collider.gameObject.name == "default")
-                    {
-                        Debug.Log("Hit floor.");
+                Vector3 point = Vector3.zero;
 
-                    }
-                    else if (hit.collider.gameObject.name == "Arena_Arena1")
-                    {
-                        Debug.Log("Hit wall.");
-                        m_Rigidbody.velocity = Vector3.zero;
-                        transform.forward *= -1.0f;
+                if (wall)
+                {
+                    point = hit1.point;
+                }
+                else if (!floor)
+                {
+                    point = transform.position + transform.forward * 1.2f;
+                }
+                Debug.Log(gameObject.name + " Evade " + hit1.collider.gameObject.name + " " + !floor + " " + wall);
+             
+                m_Rigidbody.velocity = Vector3.zero;
+                transform.forward *= -1.0f;
 
-                        // check out the distance to wall
-                        Vector3 delta = hit.point - transform.position;
-                        float distanceCautiousFactor = Mathf.InverseLerp(m_CautiousMaxDistance, 0, delta.magnitude);
+                // check out the distance to wall
+                Vector3 delta = hit1.point - transform.position;
+                float distanceCautiousFactor = Mathf.InverseLerp(m_CautiousMaxDistance, 0, delta.magnitude);
 
-                        // also consider the current amount we're turning, multiplied up and then compared in the same way as an upcoming corner angle
-                        float spinningAngle = m_Rigidbody.angularVelocity.magnitude * m_CautiousAngularVelocityFactor;
+                // also consider the current amount we're turning, multiplied up and then compared in the same way as an upcoming corner angle
+                float spinningAngle = m_Rigidbody.angularVelocity.magnitude * m_CautiousAngularVelocityFactor;
 
-                        // if it's different to our current angle, we need to be cautious (i.e. slow down) a certain amount
-                        float cautiousnessRequired = Mathf.Max(
-                            Mathf.InverseLerp(0, m_CautiousMaxAngle, spinningAngle), distanceCautiousFactor);
-                        desiredSpeed = Mathf.Lerp(m_CarController.MaxSpeed, m_CarController.MaxSpeed * m_CautiousSpeedFactor,
-                                                    cautiousnessRequired);
+                // if it's different to our current angle, we need to be cautious (i.e. slow down) a certain amount
+                float cautiousnessRequired = Mathf.Max(
+                    Mathf.InverseLerp(0, m_CautiousMaxAngle, spinningAngle), distanceCautiousFactor);
+                desiredSpeed = Mathf.Lerp(m_CarController.MaxSpeed, m_CarController.MaxSpeed * m_CautiousSpeedFactor,
+                                            cautiousnessRequired);
 
-                        // our target position starts off as the 'real' target position
-                        offsetTargetPos = hit.point;
+                // our target position starts off as the 'real' target position
+                offsetTargetPos = point;
 
-                        // if are we currently taking evasive action:
-                        if (Time.time < m_AvoidOtherCarTime)
-                        {
-                            // slow down if necessary (if we were behind the other car when collision occured)
-                            desiredSpeed *= m_AvoidOtherCarSlowdown;
+                // if are we currently taking evasive action:
+                if (Time.time < m_AvoidOtherCarTime)
+                {
+                    // slow down if necessary (if we were behind the other car when collision occured)
+                    desiredSpeed *= m_AvoidOtherCarSlowdown;
 
-                            // and veer towards the side of our path-to-target that is away from the wall
-                            offsetTargetPos += hit.point * m_AvoidPathOffset;
-                        }
-                    }
+                    // and veer towards the side of our path-to-target that is away from the wall
+                    offsetTargetPos += point * m_AvoidPathOffset;
+                }
             }
-            else if (CurrentFloor() == TargetFloor())
+             */
+            if (CurrentFloor() == TargetFloor())
             {
                 // no need for evasive action, we can just wander across the path-to-target in a random way,
                 // which can help prevent AI from seeming too uniform and robotic in their driving
@@ -194,12 +206,12 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private int CurrentFloor()
         {
-            if (Math.Abs(transform.position.y) > 10.0f)
-                return 3;
+            if (Math.Abs(transform.position.y) > 59.0f)
+                return 1;
             else if (Math.Abs(transform.position.y) > 49.0f)
                 return 2;
-            else if (Math.Abs(transform.position.y) > 59.0f)
-                return 1;
+            else if (Math.Abs(transform.position.y) > 30.0f)
+                return 3;
             else
             {
                 Debug.Log("Bad position! " + transform.position.ToString());
@@ -209,14 +221,17 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private int TargetFloor()
         {
-            if (Math.Abs(m_Target.transform.position.y) > 10.0f)
-                return 3;
+            if (Math.Abs(m_Target.transform.position.y) > 59.0f)
+                return 1;
             else if (Math.Abs(m_Target.transform.position.y) > 49.0f)
                 return 2;
-            else if (Math.Abs(m_Target.transform.position.y) > 59.0f)
-                return 1;
+            else if (Math.Abs(m_Target.transform.position.y) > 30.0f)
+                return 3;
             else
+            {
+                Debug.Log("Bad position! " + transform.position.ToString());
                 return 0;
+            }
         }
 
         private Vector3 ChangeFloor()
@@ -268,14 +283,6 @@ namespace UnityStandardAssets.Vehicles.Car
 
         }
 
-        private void OnCollisionEnter(Collision col)
-        {
-            if (col.transform.tag == "LightTrail")
-            {
-                transform.FindChild("jt_Root_C").gameObject.SetActive(false);
-                transform.FindChild("cyclepieces").gameObject.SetActive(true);
-            }
-        }
 
 
 
