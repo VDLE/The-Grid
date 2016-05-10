@@ -98,7 +98,7 @@ namespace UnityStandardAssets.Vehicles.Car
                         target = GameObject.Find(CurrentFloor().ToString() + "Top").transform;
                         offsetTargetPos = target.position;
                         transform.LookAt(target);
-                        m_Rigidbody.velocity = transform.forward * m_CarController.MaxSpeed / 3.0f;
+                        m_Rigidbody.velocity = transform.forward * m_CarController.MaxSpeed / 2.5f;
                         Debug.Log(name + " at Floor " + CurrentFloor().ToString());
                         return;
                     }
@@ -111,8 +111,12 @@ namespace UnityStandardAssets.Vehicles.Car
             }
             else
             {
-                offsetTargetPos = m_Target.position + m_Target.forward * 15.0f + attackSide * 15.0f;
-                UpRamp = false;
+                localTarget = transform.InverseTransformPoint(offsetTargetPos);
+                if (localTarget.magnitude < 2.0f)
+                {
+                    offsetTargetPos = m_Target.position + m_Target.forward * 15.0f + attackSide * 15.0f;
+                    UpRamp = false;
+                }
             }
             localTarget = transform.InverseTransformPoint(offsetTargetPos);
 
@@ -177,7 +181,6 @@ namespace UnityStandardAssets.Vehicles.Car
             {
                 // no need for evasive action, we can just wander across the path-to-target in a random way,
                 // which can help prevent AI from seeming too uniform and robotic in their driving
-
                 offsetTargetPos += 10*0f*m_Target.right *
                                     (Mathf.PerlinNoise(Time.time * m_LateralWanderSpeed, m_RandomPerlin) * 2 - 1) *
                                     m_LateralWanderDistance;
