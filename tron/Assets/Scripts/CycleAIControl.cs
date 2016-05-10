@@ -118,20 +118,6 @@ namespace UnityStandardAssets.Vehicles.Car
                 attackSide *= -1.0f;
                 m_Rigidbody.velocity *= 1.2f;
 
-                /*
-                // check out the angle of our target compared to the current direction of the car
-                float approachingCornerAngle = Vector3.Angle(m_Target.forward, fwd);
-
-                // also consider the current amount we're turning, multiplied up and then compared in the same way as an upcoming corner angle
-                float spinningAngle = m_Rigidbody.angularVelocity.magnitude;
-
-                // if it's different to our current angle, attack
-                float speedRequired = Mathf.InverseLerp(0, m_CautiousMaxAngle,
-                                                                Mathf.Max(spinningAngle,
-                                                                approachingCornerAngle));
-                desiredSpeed = Mathf.Lerp(m_CarController.MaxSpeed, m_CarController.MaxSpeed * 5.0f,
-                                            speedRequired);
-                 */
             }
 
             // the car will brake as it approaches a wall
@@ -279,7 +265,18 @@ namespace UnityStandardAssets.Vehicles.Car
                     m_AvoidPathOffset = m_LateralWanderDistance*-Mathf.Sign(otherCarAngle);
                 }
             }
+
         }
+
+        private void OnCollisionEnter(Collision col)
+        {
+            if (col.transform.tag == "LightTrail")
+            {
+                transform.FindChild("jt_Root_C").gameObject.SetActive(false);
+                transform.FindChild("cyclepieces").gameObject.SetActive(true);
+            }
+        }
+
 
 
         public void SetTarget(Transform target)

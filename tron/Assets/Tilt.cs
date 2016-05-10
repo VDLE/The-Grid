@@ -13,13 +13,13 @@ public class Tilt : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-        float h = tracked.transform.eulerAngles.z;//-CrossPlatformInputManager.GetAxis("Horizontal");
-        if (tracked.transform.rotation.eulerAngles.z < 180  )
+        float h = -CrossPlatformInputManager.GetAxis("Horizontal");
+        if (h < 180  )
         {
             h = h / 90;
             h = Mathf.Clamp(h, 0, 1);
         }
-        else if (tracked.transform.rotation.eulerAngles.z > 180)
+        else if (h > 180)
         {
             h = -(1 - ((h - 270) / 90));
             h = Mathf.Clamp(h, -1, 0);
